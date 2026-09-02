@@ -1,3 +1,7 @@
+// TextInput must be wrapped in Section({}, ...) - the Settings page's
+// native bridge only mounts interactive components that way (see
+// docs.zepp.com's TextInput example). A bare View() around it renders
+// the label text but silently drops the input box.
 AppSettingsPage({
   state: { props: {}, goal: '', glass: '' },
   setState(props) {
@@ -7,17 +11,17 @@ AppSettingsPage({
   },
   build(props) {
     this.setState(props)
-    return View({ style: { padding: '12px' } }, [
+    return Section({ style: { padding: '12px' } }, [
       View({ style: { fontSize: '14px', fontWeight: 'bold', marginBottom: '6px' } }, ['Daily goal (glasses)']),
-      TextInput({
+      Section({}, TextInput({
         value: this.state.goal, placeholder: '8',
         onChange: (val) => { this.state.goal = val; this.state.props.settingsStorage.setItem('wtGoal', val) },
-      }),
+      })),
       View({ style: { fontSize: '14px', fontWeight: 'bold', marginTop: '18px', marginBottom: '6px' } }, ['Glass size (ml)']),
-      TextInput({
+      Section({}, TextInput({
         value: this.state.glass, placeholder: '250',
         onChange: (val) => { this.state.glass = val; this.state.props.settingsStorage.setItem('wtGlass', val) },
-      }),
+      })),
     ])
   },
 })
